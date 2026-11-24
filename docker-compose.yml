@@ -1,0 +1,22 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: orderhub-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-orderhub_root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-orderhub}
+      MYSQL_USER: ${MYSQL_USER:-orderhub}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-orderhub_pwd}
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - orderhub-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+volumes:
+  orderhub-mysql-data:
