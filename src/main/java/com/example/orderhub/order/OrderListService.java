@@ -9,6 +9,6 @@ public class OrderListService {
     public OrderListService(OrderRepository repository) { this.repository=repository; }
     @Transactional(readOnly=true)
     public List<OrderSummary> listAll() {
-        return repository.findAll().stream().map(o->new OrderSummary(o.getId(),o.getUser().getName(),o.getStatus(),o.getTotalAmount())).toList();
+        return repository.findAllWithUser().stream().map(o->new OrderSummary(o.getId(),o.getUser().getName(),o.getStatus(),o.getTotalAmount())).toList();
     }
 }
