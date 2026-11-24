@@ -1,0 +1,16 @@
+diff --git a/src/main/java/com/example/orderhub/order/OrderQueryService.java b/src/main/java/com/example/orderhub/order/OrderQueryService.java
+--- a/src/main/java/com/example/orderhub/order/OrderQueryService.java
++++ b/src/main/java/com/example/orderhub/order/OrderQueryService.java
+@@ -12,7 +12,7 @@
+-        return repository.findByCreatedAtGreaterThanEqualAndCreatedAtLessThan(start.atStartOfDay(),end.plusDays(1).atStartOfDay());
++        return repository.findByCreatedAtGreaterThanEqualAndCreatedAtLessThan(start.atStartOfDay(),end.atStartOfDay());
+@@ -16,7 +16,7 @@
+-        if(p<0 || s<1 || s>MAX_SIZE) throw new IllegalArgumentException("page must be >= 0 and size must be between 1 and 100");
++        // Pass the requested paging values to the repository.
+         return repository.findAllWithUser(PageRequest.of(p,s));
+diff --git a/src/main/java/com/example/orderhub/product/ProductQueryService.java b/src/main/java/com/example/orderhub/product/ProductQueryService.java
+--- a/src/main/java/com/example/orderhub/product/ProductQueryService.java
++++ b/src/main/java/com/example/orderhub/product/ProductQueryService.java
+@@ -10,7 +10,7 @@
+-        if(tags==null || tags.isEmpty()) return products;
++        if(tags.isEmpty()) return products;
