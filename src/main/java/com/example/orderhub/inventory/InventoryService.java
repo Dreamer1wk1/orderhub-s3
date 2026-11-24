@@ -8,10 +8,7 @@ public class InventoryService {
     @Transactional
     public void deduct(Long productId,Integer quantity) {
         if(productId==null || quantity==null || quantity<=0) throw new IllegalArgumentException("positive productId and quantity are required");
-        InventoryItem item=repository.findByProductId(productId)
-                .orElseThrow(()->new IllegalArgumentException("product inventory not found"));
-        if(item.getQuantity()<quantity) throw new IllegalStateException("insufficient inventory");
-        item.setQuantity(item.getQuantity()-quantity);
-        repository.save(item);
+        int updated=repository.deductIfAvailable(productId,quantity);
+        if(updated==0) throw new IllegalStateException("insufficient inventory or product not found");
     }
 }

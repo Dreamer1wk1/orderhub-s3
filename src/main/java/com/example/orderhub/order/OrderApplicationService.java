@@ -14,6 +14,7 @@ public class OrderApplicationService {
     public OrderApplicationService(UserRepository users,OrderRepository orders,OrderPricingService pricing,InventoryService inventory) {
         this.users=users; this.orders=orders; this.pricing=pricing; this.inventory=inventory;
     }
+    @Transactional
     public OrderEntity createOrder(Long userId,Long productId,Integer quantity,BigDecimal originalAmount,BigDecimal discountRate) {
         UserEntity user=users.findById(userId).orElseThrow(()->new IllegalArgumentException("user not found"));
         BigDecimal discounted=pricing.calculateDiscountedAmount(originalAmount,discountRate);
