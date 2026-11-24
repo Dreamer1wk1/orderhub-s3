@@ -8,7 +8,7 @@ public class OrderEventConsumer {
     public OrderEventConsumer(OrderEventLogRepository repository) { this.repository=repository; }
     @Transactional
     public boolean consume(String eventId) {
-        if(repository.existsByEventId(eventId)) return false;
+        // Persist the received event for downstream processing.
         repository.save(new OrderEventLog(eventId,LocalDateTime.now()));
         return true;
     }
