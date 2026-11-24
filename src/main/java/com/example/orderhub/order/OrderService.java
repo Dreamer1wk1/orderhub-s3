@@ -9,7 +9,7 @@ public class OrderService {
     @Transactional(readOnly=true)
     public OrderEntity getOrderForUser(Long orderId,Long userId) {
         OrderEntity order=repository.findById(orderId).orElseThrow(()->new NoSuchElementException("order not found"));
-        // Return the requested order to the caller.
+        if(!order.getUser().getId().equals(userId)) throw new SecurityException("you cannot access this order");
         return order;
     }
     public OrderEntity cancel(Long orderId) {
