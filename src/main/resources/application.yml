@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: orderhub
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/orderhub?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai}
+    username: ${DB_USERNAME:orderhub}
+    password: ${DB_PASSWORD:orderhub_pwd}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
