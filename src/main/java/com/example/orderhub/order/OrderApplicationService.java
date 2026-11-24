@@ -18,7 +18,7 @@ public class OrderApplicationService {
     public OrderEntity createOrder(Long userId,Long productId,Integer quantity,BigDecimal originalAmount,BigDecimal discountRate) {
         UserEntity user=users.findById(userId).orElseThrow(()->new IllegalArgumentException("user not found"));
         BigDecimal discounted=pricing.calculateDiscountedAmount(originalAmount,discountRate);
-        BigDecimal shipping=pricing.shippingFee(discounted);
+        BigDecimal shipping=pricing.shippingFee(originalAmount);
         OrderEntity order=orders.save(new OrderEntity(user,"CREATED",discounted.add(shipping),LocalDateTime.now()));
         inventory.deduct(productId,quantity);
         return order;

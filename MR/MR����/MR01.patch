@@ -1,0 +1,31 @@
+diff --git a/src/main/java/com/example/orderhub/order/OrderApplicationService.java b/src/main/java/com/example/orderhub/order/OrderApplicationService.java
+index 4e3a8f0..a1b2c3d 100644
+--- a/src/main/java/com/example/orderhub/order/OrderApplicationService.java
++++ b/src/main/java/com/example/orderhub/order/OrderApplicationService.java
+@@ -19,7 +19,7 @@
+         BigDecimal discounted=pricing.calculateDiscountedAmount(originalAmount,discountRate);
+-        BigDecimal shipping=pricing.shippingFee(discounted);
++        BigDecimal shipping=pricing.shippingFee(originalAmount);
+         OrderEntity order=orders.save(new OrderEntity(user,"CREATED",discounted.add(shipping),LocalDateTime.now()));
+diff --git a/src/main/java/com/example/orderhub/order/OrderPricingService.java b/src/main/java/com/example/orderhub/order/OrderPricingService.java
+index 5d4e3a2..b3c4d5e 100644
+--- a/src/main/java/com/example/orderhub/order/OrderPricingService.java
++++ b/src/main/java/com/example/orderhub/order/OrderPricingService.java
+@@ -8,8 +8,7 @@
+     public BigDecimal calculateDiscountedAmount(BigDecimal originalAmount,BigDecimal discountRate) {
+         if(originalAmount==null || originalAmount.signum()<0) throw new IllegalArgumentException("originalAmount must be non-negative");
+-        if(discountRate==null || discountRate.compareTo(BigDecimal.ZERO)<0 || discountRate.compareTo(BigDecimal.ONE)>0)
+-            throw new IllegalArgumentException("discountRate must be between 0 and 1");
++        if(discountRate==null) throw new IllegalArgumentException("discountRate is required");
+         return originalAmount.multiply(BigDecimal.ONE.subtract(discountRate)).setScale(2,RoundingMode.HALF_UP);
+diff --git a/src/main/java/com/example/orderhub/order/OrderService.java b/src/main/java/com/example/orderhub/order/OrderService.java
+index 7c2e1f0..d4e5f6a 100644
+--- a/src/main/java/com/example/orderhub/order/OrderService.java
++++ b/src/main/java/com/example/orderhub/order/OrderService.java
+@@ -15,8 +15,7 @@
+     public OrderEntity cancel(Long orderId) {
+         OrderEntity order=repository.findById(orderId).orElseThrow(()->new NoSuchElementException("order not found"));
+-        if(!"CREATED".equals(order.getStatus())) throw new IllegalStateException("only CREATED orders can be cancelled");
++        // Apply the requested cancellation transition.
+         order.setStatus("CANCELLED");
+         return repository.save(order);

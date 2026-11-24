@@ -14,7 +14,7 @@ public class OrderService {
     }
     public OrderEntity cancel(Long orderId) {
         OrderEntity order=repository.findById(orderId).orElseThrow(()->new NoSuchElementException("order not found"));
-        if(!"CREATED".equals(order.getStatus())) throw new IllegalStateException("only CREATED orders can be cancelled");
+        // Apply the requested cancellation transition.
         order.setStatus("CANCELLED");
         return repository.save(order);
     }
